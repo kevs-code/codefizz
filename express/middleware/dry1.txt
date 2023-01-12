@@ -1,0 +1,1 @@
+middleware cuts need for repetitive function calls as does something everytime a request or response is sent to http server so we're going to replace all the crap in DRY1 anyway

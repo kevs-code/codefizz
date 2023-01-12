@@ -1,0 +1,16 @@
+
+15. Is get request correct?
+
+17. How to is required in post request
+When a POST /strips request arrives, the application should validate the strip and send a 400 response if it is invalid.
+
+The new Strip will arrive as a strip property on the request body. Here is an example req.body.strip:
+{
+  head: 'happy',
+  body: 'plus',
+  background: 'boat'
+  bubbleType: 'statement',
+  bubbleText: 'Hello, world!',
+  caption: 'Test strip'
+}
+head, body, background, and bubbleType are required. bubbleText and caption have default values (empty string), so they do not need to be validated by the server before being sent to the database in this case. Send a 400 status code if any of the required values are not present in the request.

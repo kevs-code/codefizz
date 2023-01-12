@@ -1,0 +1,226 @@
+components
+React applications are made out of components.
+
+What’s a component?
+
+A component is a small, reusable chunk of code that is responsible for one job. That job is often to render some HTML.
+
+Take a look at the code below. This code will create and render a new React component:
+
+
+import React from 'react';
+import ReactDOM from 'react-dom';
+
+class MyComponentClass extends React.Component {
+  render() {
+    return <h1>Hello world</h1>;
+  }
+};
+
+ReactDOM.render(
+  <MyComponentClass />,
+  document.getElementById('app')
+);
+
+On line 1, import React from 'react' creates a JavaScript object. This object contains properties that are needed to make React work, such as React.createElement() and React.Component.
+
+On line 2, import ReactDOM from 'react-dom' creates another JavaScript object. This object contains methods that help React interact with the DOM, such as ReactDOM.render().
+
+On line 4, by subclassing React.Component, you create a new component class. This is not a component! A component class is more like a factory that produces components. When you start making components, each one will come from a component class.
+
+Whenever you create a component class, you need to give that component class a name. That name should be written in UpperCamelCase. In this case, your chosen name is MyComponentClass.
+
+  render() {
+    return <h1>Hello world</h1>;
+  }
+is the body a render function
+<MyComponentClass /> creates a JSX instance of component class sub class
+
+
+quote maker
+
+import React from 'react';
+import ReactDOM from 'react-dom';
+
+class QuoteMaker extends React.Component {
+  render() {
+    return (
+      <blockquote>
+      <p>
+      What is important now is to recover our senses.
+      </p>
+      <cite>
+      <a target="_blank" 
+      href="https://en.wikipedia.org/wiki/Susan_Sontag">
+      Susan Sontag
+      </a>
+      </cite>
+      </blockquote>
+    );
+  }
+};
+
+ReactDOM.render(
+  <QuoteMaker />,
+  document.getElementById('app')
+);
+
+
+owl
+
+import React from 'react';
+import ReactDOM from 'react-dom';
+
+const owl = {
+  title: 'Excellent Owl',
+  src: 'https://s3.amazonaws.com/codecademy-content/courses/React/react_photo-owl.jpg'
+};
+
+// Component class starts here:
+class Owl extends React.Component {
+  render() {
+    return (
+      <div>
+        <h1>{owl.title}</h1>
+        <img 
+          src={owl.src}
+          alt={owl.title} />
+      </div>
+    );
+  }
+}
+
+ReactDOM.render(
+  <Owl />,
+  document.getElementById('app')
+);
+
+Yikes
+
+import React from 'react';
+import ReactDOM from 'react-dom';
+
+const friends = [
+  {
+    title: "Yummmmmmm",
+    src: "https://s3.amazonaws.com/codecademy-content/courses/React/react_photo-monkeyweirdo.jpg"
+  },
+  {
+    title: "Hey Guys!  Wait Up!",
+    src: "https://s3.amazonaws.com/codecademy-content/courses/React/react_photo-earnestfrog.jpg"
+  },
+  {
+    title: "Yikes",
+    src: "https://s3.amazonaws.com/codecademy-content/courses/React/react_photo-alpaca.jpg"
+  }
+];
+
+// New component class starts here:
+class Friend extends React.Component {
+  render() {
+    const friend = friends[2];
+    return (
+      <div>
+        <h1>{friend.title}</h1>
+        <img src={friend.src} />
+      </div>
+    );
+  }
+}
+
+ReactDOM.render(<Friend />, document.getElementById('app'));
+
+conditional
+
+import React from 'react';
+import ReactDOM from 'react-dom';
+
+class TodaysPlan extends React.Component {
+  render() {
+    let task;
+    if (!apocalypse) {
+      task = 'learn React.js'
+    } else {
+      task = 'run around'
+    }
+
+    return <h1>Today I am going to {task}!</h1>;
+  }
+}
+
+ReactDOM.render(
+	<TodaysPlan />,
+	document.getElementById('app')
+);
+
+
+fate of tonight
+
+import React from 'react';
+import ReactDOM from 'react-dom';
+
+const fiftyFifty = Math.random() < 0.5;
+
+// New component class starts here:
+class TonightsPlan extends React.Component {
+  render() {
+    let task;
+    if (!fiftyFifty) {
+      task = "Tonight I'm going out WOOO";
+    } else {
+      task = "Tonight I'm going to bed WOOO";
+    }
+
+    return <h1>{task}</h1>;
+  }
+}
+
+ReactDOM.render(
+	<TonightsPlan />,
+	document.getElementById('app')
+);
+
+getter and this
+
+import React from 'react';
+import ReactDOM from 'react-dom';
+
+class MyName extends React.Component {
+	// name property goes here:
+  get name() {
+    return 'My name is ..';
+  }
+
+  render() {
+    return <h1>My name is {this.name}.</h1>;
+  }
+}
+
+ReactDOM.render(<MyName />, document.getElementById('app'));
+
+an event
+
+import React from 'react';
+import ReactDOM from 'react-dom';
+
+class Button extends React.Component {
+  scream() {
+    alert('AAAAAAAAHHH!!!!!');
+  }
+
+  render() {
+    return <button onClick={this.scream}>AAAAAH!</button>;
+  }
+}
+
+ReactDOM.render(<Button />, document.getElementById('app'));
+
+Congratulations! You have finished the unit on React components.
+
+React components are complicated. Their syntax is complicated, and the reasoning behind their syntax is especially complicated.
+
+You have learned a lot about both their syntax and their reasoning. You have learned about component classes and component instances. You have learned about React.Component, and about the instructions that you must provide to a component class. You have learned how to import, and how to render a component instance.
+
+You have been introduced to some common ways of using JSX in React components. You have rendered components using multiline JSX expressions, logic inside of the render function, a conditional statement, this, and an event listener.
+
+You have spent a lot of time studying React components in isolation! Now, it’s time to start learning how components fit into with the world around them.

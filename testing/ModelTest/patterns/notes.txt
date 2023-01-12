@@ -1,0 +1,428 @@
+￼
+Narrative
+Learn
+MODEL TESTING PATTERNS
+Introduction
+A chat app manages messages, users, and chat rooms. A restaurant app manages customers, tables, and orders. How do applications define these entities and their interactions? The answer is the model layer.
+
+Models represent the entities and interactions in a web application’s problem domain: the area of knowledge surrounding a problem. A chat app’s problem domain includes messages, users, and chat rooms; a restaurant’s includes customers, tables, and orders. A model can define each entity, describe the shape of the data stored for each entity, validate the data, store it in a database, and interact with it.
+
+In this lesson, you will learn TDD techniques to develop a model layer using JavaScript with the Mongoose node package and a MongoDB database. For testing, you’ll be using a Mocha test framework and the Chai assertion library.
+
+To better understand the concept of a model, take this example: a full-stack web application manages the inventory of a zoo. It can add animals, remove animals, count animals, and store that information for later use. The app can be divided into three layers:
+
+Front-end: a webpage with buttons to allow users to add and remove animals. Could be implemented with HTML and CSS.
+Server: an application to handle HTTP requests and responses. It routes requests, like the addition and removal of animals, and defines responses, like the count of animals after addition/removal. Could be implemented with Express.
+Database and Models: storage and shape of the animal data. The data is grouped by animal, each with properties like species name, count, and risk-level. These fields and the methods to interact with them are defined by models, and the storage is managed by a database. Could be implemented with Mongoose models and a MongoDB database.
+Just like any other software, you can develop models using Test-Driven Development (TDD). The following exercises will help you write tests specific to the model layer.
+
+Instructions
+The zoo for this application keeps a particular type of animal. Get familiar with the data displayed on the right. You will be implementing a model for that data throughout this lesson.
+
+
+Learn
+MODEL TESTING PATTERNS
+Hooks
+Before getting any further, let’s recall some good TDD practices:
+
+make your tests expressive by writing them in four phases
+make your tests isolated with setup and teardown phases
+follow the red, green, refactor cycle
+In this lesson you will be writing your setup and teardown phases in beforeEach and afterEach hooks provided by Mocha.
+
+Before each test, your beforeEach hook will connect to the database and drop any old data using these method calls:
+
+await mongoose.connect(databaseUrl, options);
+await mongoose.connection.db.dropDatabase();
+After each test, your afterEach hook will disconnect from the database with
+
+await mongoose.disconnect();
+You can refactor these hooks by wrapping the three calls in two helper functions: connectAndDrop and disconnect. In your test file, import those functions and add them to your hooks.
+
+Instructions
+1.
+A #save test has been added to further drive development. Run the tests by entering npm test in the terminal.
+
+￼
+Stuck? Get a hint
+2.
+You should get a Timeout error — Mocha is waiting for a connection that doesn’t exist yet. Add this under the first describe:
+
+  beforeEach( async () => {
+    await mongoose.connect(databaseUrl, options);
+  });
+
+  afterEach( async () => {
+    await mongoose.disconnect;
+  });
+3.
+Run the tests and see green.
+
+4.
+Run the tests again and see red!
+
+AssertionError: expected 2 to equal 1
+This error is telling you that there are 2 documents found, when 1 was expected. Your test is not isolated — the document added in the previous test run still exists in the database.
+
+5.
+In the beforeEach hook after the call to connect, add
+
+await mongoose.connection.db.dropDatabase();
+This drops any old data in the database.
+
+6.
+Run the test suite and see green!
+
+7.
+Time to refactor. The two helper functions connectAndDrop and disconnect have been defined for you in database.js. Import the functions at the top of dinosaur-test.js by replacing {mongoose, databaseUrl, options} with {connectAndDrop, disconnect}.
+
+8.
+Delete the contents of the beforeEach hook, including async () => {...}.
+
+Pass the argument connectAndDrop to the beforeEach function.
+
+9.
+Delete the contents of the afterEach hook, including async () => {...}.
+
+Pass the argument disconnect to the afterEach function.
+
+10.
+Run the tests to confirm that you’re still in the green.
+
+MODEL TESTING PATTERNS
+Path Validation I
+According to the Department of Dino Zoo Control (DDZC), the zoo isn’t safe with more than 10 of any one type of Dinosaur.
+
+At this point your Dinosaur model has name, count, and risk properties and you have some server tests written. One of those tests expects a warning message when adding more than 10 dinosaurs, but you receive the following error message:
+
+￼
+
+This error occurred because the Dinosaur model has no validation! You can ensure the safety of the zoo by adding a validator function.
+
+In this exercise you’ll be using a custom validator function. It receives the value to validate as its first argument. It returns a Boolean, which is false if the value fails validation. Avoid arrow notation () =>. Using function() notation preserves the proper binding of this. Here’s the syntax:
+
+// Define validator
+validate = function (value) {
+  ...
+}
+
+// Add validator to Schema
+const DinosaurSchema = new Schema({
+  count: {
+    type: Number,
+    validate: [validator, 'custom err msg']
+  }
+});
+Since validation is a model-level concern, you’ll need to test at the model layer. You can test validation like this:
+
+Create an instance of a model with validators and execute the validations with the validateSync method. Any validation errors will be stored in [instance].errors.[path], like dino.errors.count.
+Make assertions on [instance].errors.[path] and its properties.
+For more information on validators visit the Validation section of the Mongoose guide: http://mongoosejs.com/docs/validation.html.
+
+Instructions
+1.
+Using TDD, ensure that a dinosaur cannot have a count of more than 10. The count and risk paths have already been defined for you.
+
+In dinosaur-test.js under it('is invalid with 11' construct a new instance of the Dinosaur model with
+
+name 'T-rex'
+count 11
+risk 'High'
+and store it in a variable dino.
+
+￼
+Stuck? Get a hint
+2.
+Call dino.validateSync() after that.
+
+￼
+Stuck? Get a hint
+3.
+If there are any errors, they will be stored in dino.errors.
+
+Use assert.ok to confirm that dino.errors exists
+Pass the custom error message 'model should have validation error' as a second argument to assert.ok
+￼
+Stuck? Get a hint
+4.
+Run npm test and see the error message
+
+AssertionError: model should have validation error: expected undefined to be truthy
+￼
+Stuck? Get a hint
+5.
+The errors object is undefined, which means no error is thrown! In dinosaur.js add
+
+validate: validator
+to the count property. You’ll define the validator function soon.
+
+￼
+Stuck? Get a hint
+6.
+Run npm test and see the error message
+
+ReferenceError: validator is not defined
+￼
+Stuck? Get a hint
+7.
+Above the DinosaurSchema declaration in dinosaur.js, define a function named validator with function(args) {} notation.
+
+￼
+Stuck? Get a hint
+8.
+Run npm test and see the AssertionError message reappear. The validator function needs to return false to raise a validation error.
+
+￼
+Stuck? Get a hint
+9.
+Make validator return false.
+
+￼
+Stuck? Get a hint
+10.
+Run npm test and see green!
+
+MODEL TESTING PATTERNS
+Path Validation II
+Your test passes and the model technically satisfies the DDZC’s no-more-than-10 regulation. But as it currently exists, there are two issues:
+
+the validation error message is not helpful, and
+the validation function will invalidate a count of any value.
+Before you write the code to fix the issues, you’ll need more failing tests.
+
+Remember that validation error messages are defined in the schema like this:
+
+age: {
+   type: Number,
+   validate: [validator, 'Age must be above 9.']
+}
+And you can assert the value of multiple properties of [instance].errors.[path] like message, path, kind, and name. You can write out multiple assertions or use assert.include:
+
+  const errorInfo = person.errors.age;
+  assert.include(errorInfo, {
+    message: 'Age must be above 9.',
+    path: 'age',
+    kind: 'user defined',
+    name: 'ValidatorError'
+  });
+The complete list of validators are available here: http://mongoosejs.com/docs/schematypes.html.
+
+Instructions
+1.
+In dinosaur-test.js at the end of the 'is invalid with 11' test, assert that dino.errors.count.message strictly equals 'Cannot hold more than 10 dinosaurs.'.
+
+2.
+Run the test suite and see the error message:
+
+AssertionError: expected 'Validator failed for path `count` with value `11`' to equal 'Cannot hold more than 10 dinosaurs.'
+￼
+Stuck? Get a hint
+3.
+Add the validation error message 'Cannot hold more than 10 dinosaurs.' in dinosaur.js. Don’t forget to use square [ ] brackets!
+
+4.
+Run the test suite and see green. Time to solve the second issue.
+
+￼
+Stuck? Get a hint
+5.
+In dinosaur-test.js below the is invalid with 11 test, add the following test.
+
+    it('is valid with 10', () => {
+      const dino = new Dinosaur({
+        name: 'Triceratops',
+        count: 10,
+        risk: 'Low'
+      });
+
+      dino.validateSync();
+
+      assert.isUndefined(dino.errors, 'model should be valid');
+    });
+6.
+Run the test suite and see red. This will drive the implementation of the validator function, which is currently invalidating every value.
+
+￼
+Stuck? Get a hint
+7.
+Change the validator function to look like this
+
+const validator = function(value) {
+  return value <= 10; 
+};
+￼
+Stuck? Get a hint
+8.
+Run the test suite and see green!
+
+￼
+Stuck? Get a hint
+9.
+Time to refactor: The validator function can be replaced by a built-in validator provided by Mongoose, max. Replace the validate property with
+
+max: [10, 'Cannot hold more than 10 dinosaurs.']
+￼
+Stuck? Get a hint
+10.
+Run the test suite and see green!
+
+Learn
+MODEL TESTING PATTERNS
+Methods I
+Now that you’ve tested the persistence of data, you’ll need methods to access that data.
+
+Mongoose schemas support
+
+static methods: methods called by a model. They typically operate on a collection of documents (instances of the model).
+instance methods: methods called by an instance of a model. They typically operate on the document (model instance) itself.
+From the previous exercise, you might recognize Dinosaur.findOne() as a static method and dino.save() as an instance method.
+
+Sometimes you need to define additional methods for your application, like if you see a server-level error such as this:
+
+￼
+
+This server test is failing because there is no model method to find Dinosaurs by name. You’ll need to drop to the model layer and write more tests.
+
+The desired query is performed on a collection of documents, so it requires a static method, which is defined in [schema].statics and called according to the example below.
+
+// static method - implementation
+DinosaurSchema.statics.findByName = function(name, callback) {
+  return this.findOne({ name: name }, callback);
+};
+// static method - call the method
+await Dinosaur.findByName('Velociraptor')
+Use function() notation instead of arrow => notation to properly bind this.
+
+You can test-drive the development of this method just like any other JavaScript method: Call the method and make assertions on its output.
+
+Instructions
+1.
+Test-drive the static method findByName(name), which returns the first document that matches a given name.
+
+In dinosaur-test.js under it('returns the first match on name' (scroll to the bottom of the file) add the following setup:
+
+      const fields = {
+        name: 'Pterodactyl',
+        count: 5,
+        risk: 'Low'
+      };
+      const dino = new Dinosaur(fields);
+      await dino.save();
+￼
+Stuck? Get a hint
+2.
+Call await Dinosaur.findByName('Pterodactyl') and store the result in a variable named stored.
+
+￼
+Stuck? Get a hint
+3.
+Using assert.include, assert that stored contains the same key-values pairs as fields.
+
+4.
+Run npm test and see the error message
+
+TypeError: Dinosaur.findByName is not a function
+￼
+Stuck? Get a hint
+5.
+In dinosaur.js, define an empty findByName method in DinosaurSchema.statics.
+
+Use function() {} notation.
+
+6.
+Run npm test and see the error message
+
+AssertionError: Target cannot be null or undefined.
+￼
+Stuck? Get a hint
+7.
+In dinosaur.js, add the implementation code provided in the narrative above.
+
+Make sure to add name and callback parameters to the function.
+
+￼
+Stuck? Get a hint
+8.
+Run npm test and see green!
+
+Narrative
+Learn
+MODEL TESTING PATTERNS
+Methods II
+Sometimes you need an instance method for your application, like if you see a server-level error such as this:
+
+￼
+
+This server test expects an increase to the dinosaur count, which is a responsibility of the Dinosaur model. You’ll need to drop to the model layer and test for a .breed() method.
+
+.breed() will increase the count of one dinosaur. This kind of method is specific to an instance of a model, so you’ll need to define it as an instance method. Do this by storing it in [schema].methods as shown below.
+
+// instance method - implementation
+DinosaurSchema.methods.breed = function() {
+  this.count = this.count + 1;
+};
+// instance method - call the method
+dino.breed()
+Use function() notation instead of arrow => notation to properly bind this.
+
+You can test-drive the development of this method just like any other JavaScript method: Call the method and make assertions on its output.
+
+Instructions
+1.
+In dinosaur-test.js under it('increases count by 1' (scroll to the bottom of the file) add the following setup:
+
+      const start = 3;
+      const end = 4;
+      const dino = new Dinosaur({
+        name: 'Stegosaurus',
+        count: start,
+        risk: 'Low'
+      });
+￼
+Stuck? Get a hint
+2.
+Call dino.breed().
+
+￼
+Stuck? Get a hint
+3.
+Assert that dino.count is strictly equal to end.
+
+￼
+Stuck? Get a hint
+4.
+Run npm test and see the error message
+
+TypeError: dino.breed is not a function
+￼
+Stuck? Get a hint
+5.
+In dinosaur.js, define an empty breed method in DinosaurSchema.methods.
+
+Use function() {} notation.
+
+6.
+Run npm test and see the error message
+
+AssertionError: expected 3 to equal 4
+￼
+Stuck? Get a hint
+7.
+In dinosaur.js, add the implementation code provided in the narrative above.
+
+￼
+Stuck? Get a hint
+8.
+Run npm test and see green!
+
+Narrative
+Learn
+MODEL TESTING PATTERNS
+Review
+You have developed a model using TDD!
+
+The model layer represents entities and interactions in a web app’s problem domain.
+Model paths can be test-driven using validators. Call validateSync and make assertions on the properties of [instance].errors.[path].
+The storage of data can be tested with construction and updating methods like save and update. Retrieval can be tested with query methods like find, findOne, and findby.
+Static methods are stored in [schema].statics and instance methods are stored in [schema].methods. Both can be tested like any other JavaScript function.
+To learn more about Mongoose, read the guide and refer to the API docs as needed.

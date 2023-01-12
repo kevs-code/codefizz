@@ -1,0 +1,215 @@
+npm init
+npm install mocha -D
+
+Narrative
+Learn
+AUTOMATE AND ORGANIZE TESTS
+Install Mocha II
+After installing Mocha as a dependency we can run it in two ways.
+
+The first (and more tedious) method is to call it directly from node_modules:
+
+$ ./node_modules/mocha/bin/mocha
+The second (and recommended) method is to add a script to package.json. In the scripts object in package.json, set the value of "test" to mocha. It should look like this:
+
+"scripts": {
+  "test": "mocha"
+}
+Now you can call Mocha with the following command:
+
+$ npm test
+Instead of manually running each test in the test directory, you can use this command to run the full test suite automatically.
+
+Instructions
+1.
+Using the guide above, set the test script to "mocha" in package.json. This connects the command line command npm test with the Mocha package.
+
+2.
+Run the test suite with Mocha. In the terminal window type:
+
+$ npm test
+The command will be executed but you will see a warning in the terminal: there aren’t any tests to run yet!
+
+AUTOMATE AND ORGANIZE TESTS
+describe and it blocks
+In Mocha we group tests using the describe function and define tests using the it function. These two functions can be used to make your test suite complete, maintainable, and expressive in the following ways:
+
+Structure your test suite: you can organize tests into nested groups that reflect the structure of your implementation code.
+
+Provide informative messages: you can define your tests using human-readable strings.
+
+If you are testing a Math object with the method .max, you could use the following test code.
+
+describe('Math', () => {
+  describe('.max', () => {
+    it('returns the argument with the highest value', () => {
+      // Your test goes here
+    });
+    it('returns -Infinity when no arguments are provided', () => {
+      // Your test goes here
+    });
+  });
+});
+Both the describe and it functions accept two parameters: a descriptive string and a callback function. Though the functions are flexible, they are commonly used in the structure above: nest describe blocks to resemble the structure of your implementation code and write individual tests in it blocks. This makes your test suite isolated, maintainable, and expressive.
+
+Instructions
+1.
+Using the previous example as a guide, you will write a describe - describe - it block for the function Math.min().
+
+In test/index_test.js, create your first describe block using 'Math' as the descriptive string.
+
+2.
+Within the block, create another describe block using '.min' as the descriptive string.
+
+3.
+Within the block, create an it block using 'returns the argument with the lowest value' as the descriptive string.
+
+
+AUTOMATE AND ORGANIZE TESTS
+Setup, Exercise, and Verify
+In this exercise you will be separating a test into setup, exercise, and verify phases. This distinct and well-defined separation of steps makes your test more reliable, maintainable, and expressive.
+
+The phases are defined as follows:
+
+Setup - create objects, variables, and set conditions that your test depends on
+
+Exercise - execute the functionality you are testing
+
+Verify - check your expectations against the result of the exercise phase. You can use the assert library here
+
+Clearly separating each phase makes a test easier to read, change, and validate.
+
+Instructions
+1.
+The same test is written twice – once in a naive approach, once using setup, exercise, and verify phases.
+
+Run the test suite.
+
+2.
+Both tests have errors! The test output will tell you which line threw an error for each test.
+
+Following the examples below, fix both tests using the correct call to .pop().
+
+ const arr = ['entry1', 'entry2'];
+ ['entry1', 'entry2'].pop(); // for naive test
+ arr.pop(); // for 3phase test
+￼
+Stuck? Get a hint
+3.
+Which test approach was easier to read and edit? Answer this for yourself then move on to the next exercise.
+
+
+AUTOMATE AND ORGANIZE TESTS
+Teardown
+Some tests require a fourth phase called teardown. This step makes your test isolated.
+
+Teardown - reset any conditions that were changed during the test
+A test, like the example in this exercise, can make changes to its environment that could affect other tests. The teardown phase is used to reset the environment before the next test runs.
+
+Some common changes to an environment include
+
+altering files and directory structure
+changing read and write permissions on a file
+editing records in a database
+In some cases — including the previous exercise — the teardown phase isn’t needed because there are no conditions to reset.
+
+Instructions
+1.
+This exercise uses Node’s filesystem library fs in addition to assert. It’s okay if you’re not familiar with fs: each function is described in comments.
+
+The call to fs.appendFileSync(path, str) will do one of two things:
+
+If a file at path does not exist, the method creates the file and adds the string str to that file.
+If the file does exist, the method adds the string str to the end of the file.
+The current test does not have a teardown phase. Run it using the terminal.
+
+2.
+Run the test suite again. Compare this output to the output of the previous test run.
+
+Note the new file message.txt created in your directory.
+
+project
+|_ node_modules
+|_ test
+|___ index_test.js
+|_ message.txt
+|_ package.json
+3.
+You got different output because the test was not isolated.
+
+In the first run the file didn’t exist, so fs.appendFileSync created a message.txt file containing the string.
+In the second run, the method added the string to the end of message.txt because it already existed.
+In the terminal enter rm message.txt to delete the file.
+
+4.
+Add this code below // Teardown. This method will delete the file at path before the test finishes.
+
+fs.unlinkSync(path);
+5.
+Verify that you fixed the issue: run the test suite twice and compare the outputs.
+
+
+Narrative
+Learn
+AUTOMATE AND ORGANIZE TESTS
+Hooks
+Using teardown in the it block made your test isolated, but not reliable.
+
+If the system encounters an error before it reaches the teardown, it will not execute that phase. In the previous example, an error may occur after the file is created but before it is deleted. The file would persist and may cause false negatives in future test runs.
+
+Mocha provides hooks to solve that problem.
+
+A hook is a piece of code that is executed when a certain event happens. Hooks can be used to set and reset conditions like the setup and teardown phases do. In Mocha, a hook is written within a describe block.
+
+describe('example', () => {
+
+  afterEach(() => {
+    // teardown goes here
+  });
+
+  it('.sample', () => {
+    // test goes here
+  });
+});
+In this example the function passed to afterEach is called after each it block is executed.
+
+The other hooks in the Mocha library are before(), beforeEach(), and after(). You can read more about them on the Mocha website.
+
+Instructions
+1.
+Run the test suite.
+
+2.
+A misspelling on line 16 caused the TypeError that you see. It prevented the execution of the teardown phase! This means the message.txt file wasn’t deleted (see below).
+
+project
+|_ node_modules
+|_ test
+|___ index_test.js
+|_ message.txt
+|_ package.json
+In the terminal enter rm message.txt to delete the file.
+
+3.
+Within the describe block, create an afterEach hook with an empty function as its argument.
+
+￼
+Stuck? Get a hint
+4.
+Move the teardown phase into the afterEach hook.
+
+￼
+Stuck? Get a hint
+5.
+Confirm the hook works!
+
+Run test suite and find that message.txt is deleted despite the error in it block.
+
+You can now write tests with Mocha and Node’s assert.ok() ! In this lesson you learned to:
+
+Install Mocha with npm
+Organize tests with describe() and it()
+Ensure your tests are isolated and expressive with the four phases of a test
+Ensure your tests are reliable with hooks
+Write assertions with assert.ok()
+As you continue to write tests, remember to always evaluate them against the characteristics of a good test: fast, complete, reliable, isolated, maintainable, and expressive. If you are meeting these six criteria, you are creating high quality test frameworks!

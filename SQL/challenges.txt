@@ -1,0 +1,40 @@
+SELECT year, number
+FROM babies
+WHERE name = 'Lillian';
+
+SELECT DISTINCT name
+FROM babies
+WHERE name LIKE 'S%'
+LIMIT 20;
+
+SELECT DISTINCT name
+FROM babies
+WHERE name LIKE 'S%'
+LIMIT 20;
+
+SELECT *
+FROM nomnom
+WHERE cuisine = 'Japanese'
+AND price = '$$';
+
+SELECT *
+FROM nomnom
+WHERE name LIKE '%noodle%';
+
+SELECT *
+FROM nomnom
+WHERE health is NULL;
+
+SELECT title, publisher
+FROM news
+ORDER BY title;
+
+SELECT *
+FROM news
+WHERE title LIKE '%bitcoin%';
+
+SELECT *
+FROM news
+WHERE category = 'b'
+ORDER BY timestamp DESC
+LIMIT 20;

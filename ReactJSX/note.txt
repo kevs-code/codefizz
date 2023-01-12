@@ -1,0 +1,6 @@
+a. Changes on the real DOM cause the screen to change.
+b. A JSX element renders.
+c. The virtual DOM is compared to what it looked like before it updated to figure out which objects have changed.
+d. The entire virtual DOM gets updated.
+e. The changed objects, and the changed objects only, get updated on the real DOM.
+b,d,c,e,a

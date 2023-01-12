@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<!--barebones form no validation -->
+<html lang="en" dir="ltr">
+  <body>
+    <h1>Welcome To This Form</h1>
+    <form action="" method="POST">
+          <label for="text">You can enter text here:</label>
+    			<input type="text" name="text">
+        <hr>
+          <label for="num">You can enter a number here:</label>
+          <input type="number" name="num">
+        <hr>
+          <label for="slider">You can slide this:</label>
+          <br>
+          <span>Left</span>
+          <input type="range" name="slider" value="3" min="1" max="5">
+          <span>Right</span>
+        <hr>
+       <label for="boxes">You can check these:</label>
+          <input type="checkbox" name="boxes" value="first">
+          <label for="first">First</label>
+          <input type="checkbox" name="boxes"  value="second">
+          <label for="second">Second</label>
+          <input type="checkbox" name="boxes" value="third">
+          <label for="third">Third</label>
+        <hr>
+      <label for="radio">You can select one of these:</label>
+          <input type="radio" name="radio" value="true">
+          <label for="true">TRUE</label>
+          <input type="radio" name="radio" value="false">
+          <label for="false">FALSE</label>
+        <hr>
+          <label for="dropdown">You can select one of these</label>
+          <select name="dropdown">
+            <option value="first">First</option>
+            <option value="second">Second</option>
+            <option value="third">Third</option>
+          </select>
+        <hr>
+          <input type="submit" value="Submit to Reset">
+      </form>
+  </body>
+</html>
+
+<!--REGEX -->
+<?php
+/*
+[^]*\d{3}[^]*\d{3}-\d{4}
+
+(617) 222-1247
++1-341-554-3910
+[hH]ello[^]*
+hello
+hello world
+Hello, world!
+Hello, Friend!
+
+[^]*
+
+hello
+hello world
+Hello, world!
+Hello, Friend!
+coolEmail@blorglax.com
+P@55w0rd!
+(617) 222-1247
++1-341-554-3910
+1630 Revello Drive, Sunnydale, California
+3170 West 53 Road, #35, Annapolis, Maryland
+
+*/
+
+#client side validation
+
+?>
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <body>
+    <h1>Basic HTML Validation</h1>
+    <form action="" method="POST">
+      <label for="text">Enter your name here:</label>
+    	<input id="name" name="name" type="text" required minlength="3" maxlength="100">
+      <br><br>
+      <label for="number">Enter your age here:</label>
+      <input type="number" name="age" id="age" required min="1" max="123">
+      <br><br>
+        <label for="code">Best place to learn to code: (hint: starts with a "C")</label>
+  <input id="code" name="code" type="text" required pattern="[cC]odecademy">
+      <br><br>
+      <input type="submit" value="Submit">
+    </form>
+  </body>
+</html>
+<?php
+
+#can also use libraries such as parsley.js for clientside validation e.g.,
+
+/*
+Rules:
+Please enter a password. It must:
+Be between 5 and 20 characters in length.
+Use at least one letter.
+Use at least one number.
+Use at least one kind of bracket.
+Not contain the word "password".
+Definitely contain the word "validation".
+Let's Go!
+Excellent!
+The password submission is valid :)
+*/
+
+
+/*
+
+INTRODUCTION TO FORM VALIDATION
+Back-end Validation
+No matter how complete the front-end validation of a website or application seems, validations must also be completed on the back-end or server-side. Front-end validations are easy to bypass—a malicious user can simply turn off JavaScript on their browser, for example. There’s also the potential for middleman attacks in which data is changed after the request is submitted by a user but before it arrives at the server. As a rule, the back-end should never trust the data it receives.
+
+As the developer, once data is in the back-end, we have complete control over it, luckily. Back-end validation has several advantages:
+
+It enables us to use validation code often on machines with more computing power.
+It allows us to write validation code that a user can’t see—if malicious users can’t see exactly how we validate the data, it’s much more difficult for them to find ways around it.
+We can validate the information against other data the front-end doesn’t have access to—for example, we can check our database to see if a given username is already in use.
+There are two main ways to validate inputs on the server-side. The first takes place while the user is still inputting data into the form on the front-end. We can make asynchronous requests to the server with pieces of their data and send feedback directly to the user before they’ve submitted. This is slower than front-end validation and can be a design challenge from a user-experience perspective.
+
+The second is once the form has been submitted. Back-end form validation is our application’s last defense against problematic data, and it’s essential to verify the validity and safety of data before adding it to a database. This is also an opportunity to “sanitize” the data: in order for our database to be useful, it’s important that all data within it is formatted consistently. This means that while we may want to be flexible about the formatting we require from a user, we likely want to transform inputs into a strict format before entering them in the database.
+
+Instructions
+This video illustrates the process of validating forms on the back-end.
+*/
+?>
+
+/*
+
+
+Review
+In this lesson, we’ve explored form validation from many angles. Let’s review what we covered:
+
+Modern websites require a lot of information from their users and they collect a lot of this information through HTML forms.
+It’s essential to validate the data submitted through forms to keep websites secure and to make sure they function correctly.
+Regular expressions are sequences of characters that define patterns to look for in text. They are an important tool used in validating input.
+Modern HTML comes with useful built-in methods for form validation.
+Custom and complicated client-side validation can be accomplished with JavaScript.
+Asynchronous requests to the server can perform back-end validations before a form has been submitted.
+A final back-end validation of all data is required to ensure an application’s security and sanitize all data.
+
+Telephone call:
+
+School: Hi, This is your sons school.
+Parent: Oh, dear - did he break something?
+School: In a way ...
+School: Did you really name your son Robert') DROP TABLE Students;-- ?
+'Parent: Oh, Yes. Little Bobby Tables, we call him.
+School: Well, we have lost this years student records. I hope you are happy/
+Parent: and I hope you have learned to sanitize your data inputs.
+*/
+
+

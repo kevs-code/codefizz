@@ -1,0 +1,111 @@
+P7LY6-LA9FH-WXZ80 civ5 gold
+96743113
+please install libelf-dev, libelf-devel or elfutils-libelf-devel"
+cd rtl8812AU-driver-4.3.14
+make CC=/usr/bin/gcc-5
+sudo make install
+sudo modprobe 8812au
+echo 8812au | sudo tee -a /etc/modules
+ libelf-dev:amd64 depends on libelf1 (= 0.176-1.1); however:
+  Version of libelf1:amd64 on system is 0.165-3ubuntu1.2.
+ libelf-dev:i386 depends on libelf1 (= 0.176-1.1).
+ libelf-dev:i386 depends on zlib1g-dev
+sudo mkdir /mnt/d
+sudo mount -t drvfs D: /mnt/d
+Unpacking elfutils (0.176-1.1) ...
+dpkg: dependency problems prevent configuration of elfutils:
+ elfutils depends on libasm1 (>= 0.132); however:
+  Package libasm1 is not installed.
+ elfutils depends on libdw1 (= 0.176-1.1); however:
+  Version of libdw1:amd64 on system is 0.165-3ubuntu1.2.
+ elfutils depends on libelf1 (= 0.176-1.1); however:
+  Version of libelf1:amd64 on system is 0.165-3ubuntu1.2.
+
+2. Install some basic requirements (just in case)
+On my computer it was already installed, but in some tutorials they advise you to check that linux-headers and build-essentials are installed. gcc-5 is the default C compiler on Ubuntu 16.04, so it should also already be installed.
+
+sudo apt-get install linux-headers-$(uname -r) build-essential gcc-5
+3. Compile and install the driver
+Unzip the file. Then in the terminal, move to the code folder with cd. Then build the binary using make. Then install using make install. Then add the module to your kernel using modprobe. Then add 8812au to the end of the file /etc/modules with tee -a to tell the OS to load the driver when it boots (I am not sure this is mandatory, but do it anyway, it cannot be bad!).
+
+cd rtl8812AU-driver-4.3.14
+make CC=/usr/bin/gcc-5
+sudo make install
+sudo modprobe 8812au
+echo 8812au | sudo tee -a /etc/modules
+
+
+histort
+2015 git clone https://github.com/abperiasamy/rtl8812AU_8821AU_linux
+2016 cd rtl8812AU_8821AU_linux/
+2017 make
+2018 sudo make install
+2019 sudo modprobe -r 8812au
+2020 sudo modprobe -a rtl8812au
+2021 sudo iwconfig
+2022 history
+2023 sudo nano /etc/modules
+2024 sudo apt-get update
+2025 sudo apt-get install dkms
+2026 sudo cp -R . /usr/src/rtl8812AU_8821AU_linux-1.0
+2027 sudo dkms add -m rtl8812AU_8821AU_linux -v 1.0
+2028 sudo dkms build -m rtl8812AU_8821AU_linux -v 1.0
+2029 sudo dkms install -m rtl8812AU_8821AU_linux -v 1.0
+
+😺 It is not something that is not documented...
+
+turn off network manager
+sudo systemctl stop network-mamnager
+
+kill any potentially conflictive process
+sudo kill wpa_supplicant
+sudo kill dhclient
+
+generate the configuration file to be used with wpa_supplicant
+wpa_passphrase <eSSID> <Wireless_key> >> /tmp/test.conf
+(eSSID is the name of your network and you have to put the wifi key you have configured.)
+It will generate something like that
+network={
+ssid="WiFi_XXXX"
+#psk="WiFilibr3!"
+psk=3af35a94a429490ea2ae3e5fa6fd970516c45566255e0bd5c2094b93f3cfac0a
+}
+
+Launch wpa_supplicant with the configuration file
+sudo wpa_supplicant -i<interface> -c /tmp/test.conf
+
+Instead of interface put the identifier of your wifi device
+
+Open another shell (do not close the one you've just used right now; the process with wpa_suplicant is running) and get an IP
+sudo dhclient <interface>
+
+You should be connected. Check it (ping google for example)
+
+Once you checked you can close the first shell (or press ctrl+c to kill the process) and to restart network-manager simply do
+sudo systemctl restart network-manager
+
+
+NM tries to change MAC on every connect but something goes wrong.
+Add the following lines
+[device]
+wifi.scan-rand-mac-address=no
+at the end of the /etc/NetworkManager/NetworkManager.conf
+and restart NetworkManager
+sudo service NetworkManager restart
+
+make
+sudo make install
+sudo modprobe rtl8812au
+
+
+20
+
+With a temporary working internet connection by ethernet, tethering or whatever means possible, open a terminal and do:
+sudo apt update
+sudo apt install git
+git clone https://github.com/gnab/rtl8812au.git
+sudo cp -r rtl8812au  /usr/src/rtl8812au-4.2.2
+sudo dkms add -m rtl8812au -v 4.2.2
+sudo dkms build -m rtl8812au -v 4.2.2
+sudo dkms install -m rtl8812au -v 4.2.2
+

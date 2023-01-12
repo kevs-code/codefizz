@@ -1,0 +1,26 @@
+#nano file.txt
+#vi much much better :)
+#Ctrl + O saves a file. ‘O’ stands for output.
+#Ctrl + X exits the nano program. ‘X’ stands for exit.
+#Ctrl + G opens a help menu.
+#clear clears the terminal window, moving the command prompt to the top of the screen
+alias pd="pwd"
+alias hy="history"                                                              alias ll="ls -la"
+export USER="Janet Doe"
+export PS1=">> " 
+#PS1 is command prompt so change $ >> 
+echo $HOME
+echo $PATH
+/bin/ls
+/bin/pwd
+env
+env | grep PATH
+
+#export VARIABLE="Value" sets and exports an environment variable.
+#USER is the name of the current user.
+#PS1 is the command prompt.
+#HOME is the home directory. It is usually not customized.
+#PATH returns a colon separated list of file paths. It is customized in advanced cases.
+#env returns a list of environment variables.
+export LESS="-N"
+env | $LESS

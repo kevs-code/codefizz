@@ -1,0 +1,9 @@
+npm install express
+npm install body-parser
+node app.js
+# instead of npm start
+npm install sqlite3@^3
+# installs older version
+node sql.js 
+node seed.js
+# after making db seed it.

@@ -1,0 +1,51 @@
+node -v
+
+#version
+
+node
+#enter REPL 
+
+.editor
+#enter multiline mode
+
+CTRL+D
+ready to evaluate input
+
+#node enviroment contains node specific global elements that sit inside the node global object in addition to js elements
+
+console.log(global)
+#view global object
+
+#as REPL Read, Evaluate, Print loop
+#can just type global to view global object
+
+Object.keys(global)
+[ 'global',
+  'process',
+  'Buffer',
+  'clearImmediate',
+  'clearInterval',
+  'clearTimeout',
+  'setImmediate',
+  'setInterval',
+  'setTimeout',
+  'console',
+  'module',
+  'require' ]
+
+#easier to human read just the keys above
+
+global.cat = 'meow!'
+
+#as global object contains lots of useful methods can, but still an object can just add new properties like global.cat above
+
+console.log(global.cat)
+'meow!'
+
+#If you’re familiar with running JavaScript on the browser, you’ve likely encountered the Window object. Here’s one major way that Node differs: try to access the Window object (this will throw an error). The Window object is the JavaScript object in the browser that holds the DOM, since we don’t have a DOM here, there’s no Window object.
+#You’ll learn more about the global object
+
+
+node app.js
+#run app.js
+node app.js argumentHere
